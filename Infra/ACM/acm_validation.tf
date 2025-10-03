@@ -1,10 +1,6 @@
 variable "ACMvar" {
   type = object({
-    openid_provider_arn = string
-    openid_provider_url = string
     Name = string
-    region = string
-    vpc_id = string
     domain_name = string
   })
 }
@@ -56,7 +52,7 @@ resource "aws_acm_certificate_validation" "certificateValidation" {
   validation_record_fqdns = [for record in aws_route53_record.CNAME : record.fqdn]
 }
 
-output "certificate_arn" {
+output "acm_certificate_arn" {
   value       = aws_acm_certificate.certificate.arn
   description = "ARN of the ACM Certificate"
   

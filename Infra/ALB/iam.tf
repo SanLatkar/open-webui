@@ -7,6 +7,7 @@ variable "ALBvar" {
     region = string
     vpc_id = string
     domain_name = string
+    acm_certificate_arn = string
   })
 }
 

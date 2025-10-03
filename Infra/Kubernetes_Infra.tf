@@ -53,6 +53,12 @@ module "ALB" {
   ALBvar = local.ALBvar
 }
 
+# Module to create AWS ALB Role
+module "ACM" {
+  source = "./ACM"
+  ACMvar = local.ACMvar
+}
+
 locals {
   EKSvar = {
     ami_type = var.ami_type
@@ -111,8 +117,17 @@ locals {
     region = var.region
     domain_name = var.domain_name
     vpc_id = module.VPC.vpc_id
+    acm_certificate_arn = module.ACM.acm_certificate_arn
   }
 }
+
+locals {
+  ACMvar = {
+    Name = var.Name
+    domain_name = var.domain_name
+  }
+}
+
 
 
 output "alb_controller_role_arn" {
@@ -120,12 +135,18 @@ output "alb_controller_role_arn" {
   description = "ALB Controller IAM Role ARN"
 }
 
-output "helm_release_status" {
-  value       = module.ALB.helm_release_status
-  description = "Helm release status"
+output "open_webui_helm_release_status" {
+  value       = module.ALB.open_webui_helm_release_status
+  description = "OPen Webui Helm release status"
 }
 
 output "open_webui_url" {
   value       = module.ALB.open_webui_url
   description = "Open-WebUI URL"
+}
+
+output "alb_dns_name" {
+  value       = module.ALB.alb_dns_name
+  description = "DNS name of the ALB"
+  
 }

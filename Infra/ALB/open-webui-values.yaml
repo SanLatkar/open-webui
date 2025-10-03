@@ -44,7 +44,7 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/group.name: ${name}
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'  
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:165672952247:certificate/20668381-5373-415e-b8c5-2f589f909556
+    alb.ingress.kubernetes.io/certificate-arn: '${acm_certificate_arn}'
     alb.ingress.kubernetes.io/healthcheck-port: traffic-port
     alb.ingress.kubernetes.io/success-codes: 200,404
   host: '${name}.${domain_name}'
