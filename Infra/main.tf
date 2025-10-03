@@ -48,12 +48,28 @@ module "VPC" {
 }
 
 # Module to create AWS ALB Role
-module "ALB" {
-  source = "./ALB"
+# module "ALB" {
+#   source = "./ALB"
+#   ALBvar = local.ALBvar
+# }
+
+# Module to create Addons
+module "Addon" {
+  source = "./Addon"
   ALBvar = local.ALBvar
 }
 
-# Module to create AWS ALB Role
+# Module to create Apps
+module "Apps" {
+  source = "./Apps"
+  ALBvar = local.ALBvar
+
+  # depends_on = [
+  #   module.Addon
+  # ]
+}
+
+# Module to create AWS ACM
 module "ACM" {
   source = "./ACM"
   ACMvar = local.ACMvar
@@ -131,22 +147,22 @@ locals {
 
 
 output "alb_controller_role_arn" {
-  value       = module.ALB.alb_controller_role_arn
+  value       = module.Addon.alb_controller_role_arn
   description = "ALB Controller IAM Role ARN"
 }
 
 output "open_webui_helm_release_status" {
-  value       = module.ALB.open_webui_helm_release_status
+  value       = module.Apps.open_webui_helm_release_status
   description = "OPen Webui Helm release status"
 }
 
 output "open_webui_url" {
-  value       = module.ALB.open_webui_url
+  value       = module.Apps.open_webui_url
   description = "Open-WebUI URL"
 }
 
 output "alb_dns_name" {
-  value       = module.ALB.alb_dns_name
+  value       = module.Apps.alb_dns_name
   description = "DNS name of the ALB"
   
 }

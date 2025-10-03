@@ -70,7 +70,7 @@ resource "helm_release" "aws_load_balancer_controller" {
   version    = "1.13.0"
 
   values = [
-    templatefile("${path.module}/aws-alb-values.yaml", {
+    templatefile("${path.module}/values/aws-alb-values.yaml", {
       cluster_name = var.ALBvar.Name
       role_arn     = aws_iam_role.AmazonEKSLoadBalancerControllerRole.arn
     })

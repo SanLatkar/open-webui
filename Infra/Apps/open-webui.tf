@@ -1,3 +1,15 @@
+variable "ALBvar" {
+  type = object({
+    openid_provider_arn = string
+    openid_provider_url = string
+    Name = string
+    region = string
+    vpc_id = string
+    domain_name = string
+    acm_certificate_arn = string
+  })
+}
+
 resource "helm_release" "open-webui" {
   name       = "open-webui"
   repository = "https://helm.openwebui.com/" 
@@ -7,16 +19,13 @@ resource "helm_release" "open-webui" {
   create_namespace = true
 
   values = [
-    templatefile("${path.module}/open-webui-values.yaml", {
+    templatefile("${path.module}/values/open-webui-values.yaml", {
       name = var.ALBvar.Name
       domain_name = var.ALBvar.domain_name
       acm_certificate_arn = var.ALBvar.acm_certificate_arn
     })
   ]
 
-  depends_on = [
-    aws_iam_role_policy_attachment.AmazonEKSLoadBalancerControllerRolePolicyAttachment
-  ]
 }
 
 
