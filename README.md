@@ -4,14 +4,14 @@ A production-ready deployment of Open WebUI on Amazon EKS using Terraform, featu
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Deployment Steps](#deployment-steps)
-- [Configuration](#configuration)
-- [Problems Solved](#problems-solved)
-- [Cleanup](#cleanup)
-- [Troubleshooting](#troubleshooting)
+- [Overview](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#-overview)
+- [Prerequisites](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#-prerequisites)
+- [Quick Start](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#-quick-start)
+- [Deployment Steps](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#-deployment-steps)
+- [Configuration](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#%EF%B8%8F-configuration)
+- [Problems Solved](ttps://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#%EF%B8%8F-problems-solved)
+- [Cleanup](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#-cleanup)
+- [Troubleshooting](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#-troubleshooting)
 
 ## 🎯 Overview
 
@@ -29,37 +29,11 @@ This project deploys Open WebUI (a user-friendly AI interface) on AWS EKS with:
 
 ### Required Tools
 
-1. **AWS CLI** (v2.x or higher)
-   ```bash
-   # Install on macOS
-   brew install awscli
-   
-   # Install on Linux
-   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-   unzip awscliv2.zip
-   sudo ./aws/install
-   ```
+1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) (v2.x or higher)
 
-2. **Terraform** (v1.5.0 or higher)
-   ```bash
-   # Install on macOS
-   brew install terraform
-   
-   # Install on Linux
-   wget https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip
-   unzip terraform_1.6.0_linux_amd64.zip
-   sudo mv terraform /usr/local/bin/
-   ```
+2. [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (v1.5.0 or higher)
 
-3. **kubectl** (optional, for cluster management)
-   ```bash
-   # Install on macOS
-   brew install kubectl
-   
-   # Install on Linux
-   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-   sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-   ```
+3. [kubectl](https://kubernetes.io/docs/tasks/tools/) (optional, for cluster management)
 
 ### AWS Requirements
 
@@ -105,6 +79,8 @@ Enter your AWS credentials:
 - **Default region**: `us-east-1` (or your preferred region)
 - **Default output format**: `json`
 
+` Note: Domain name and S3 bucket should be unique. You can purchase domain name and create S3 bucket of your choice. Don't forgot to update s3 bucket name in terraform backend and domain name in .tfvars `
+
 ### Step 2: Purchase Domain (Optional)
 
 If you don't have a domain:
@@ -116,8 +92,7 @@ If you don't have a domain:
 ```bash
 aws route53 create-hosted-zone \
   --name sanketlatkar.cloud \
-  --caller-reference "open-webui-$(date +%s)" \
-  --hosted-zone-config Comment="Hosted zone for Open WebUI on EKS"
+  --caller-reference "open-webui-$(date +%s)"
 ```
 
 **Important**: Copy the 4 nameservers from the output and update them in your domain registrar's DNS settings.
