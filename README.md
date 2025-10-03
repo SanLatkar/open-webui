@@ -9,7 +9,7 @@ A production-ready deployment of Open WebUI on Amazon EKS using Terraform, featu
 - [Quick Start](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#-quick-start)
 - [Deployment Steps](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#-deployment-steps)
 - [Configuration](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#%EF%B8%8F-configuration)
-- [Problems Solved](ttps://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#%EF%B8%8F-problems-solved)
+- [Problems Solved](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#%EF%B8%8F-problems-solved)
 - [Cleanup](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#-cleanup)
 - [Troubleshooting](https://github.com/SanLatkar/open-webui/tree/1-deploy-open-webui-in-a-cloud-environment?tab=readme-ov-file#-troubleshooting)
 
