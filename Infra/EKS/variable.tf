@@ -12,33 +12,13 @@ variable "EKSvar" {
   })
 }
 
-# variable "VPCvar" {
-#   type = object({
-#     subnets = map(object({
-#       cidr_block = string
-#       az_index   = number
-#       type       = string
-#     }))
-#     public_subnets = map(object({
-#       cidr_block = string
-#       az_index   = number
-#       type       = string
-#     }))
-#     private_subnets = map(object({
-#       cidr_block = string
-#       az_index   = number
-#       type       = string
-#     }))
-#   })
-  
-# }
-
-
+# Map of private subnet IDs
 variable "private_subnet_ids" {
   description = "Map of private subnet IDs"
   type        = map(string)
 }
 
+# Map of public subnet IDs
 variable "public_subnet_ids" {
   description = "Map of public subnet IDs"
   type        = map(string)

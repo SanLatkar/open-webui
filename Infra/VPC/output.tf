@@ -1,3 +1,4 @@
+# VPC ID Output
 output "vpc_id" {
   value       = aws_vpc.EKS-vpc.id
   description = "VPC id."
@@ -5,6 +6,7 @@ output "vpc_id" {
   sensitive = false
 }
 
+# Public Subnet IDs Output
 output "public_subnet_ids" {
   value = {
     for key, subnet in aws_subnet.main : key => subnet.id
@@ -12,6 +14,7 @@ output "public_subnet_ids" {
   }
 }
 
+# Private Subnet IDs Output
 output "private_subnet_ids" {
   value = {
     for key, subnet in aws_subnet.main : key => subnet.id

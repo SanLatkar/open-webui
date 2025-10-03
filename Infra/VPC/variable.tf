@@ -1,3 +1,4 @@
+# Variable function To call variable values for VPC module from root module.
 variable "VPCvar" {
   type = object({
     Name = string,

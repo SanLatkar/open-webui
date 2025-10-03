@@ -34,7 +34,6 @@ locals {
 # Launch Template for EKS Node Group
 resource "aws_launch_template" "launch_template" {
   name   = "${var.EKSvar.Name}-launch-template"
-  # instance_type = var.EKSvar.instance_types
 
   metadata_options {
     http_tokens = "required"

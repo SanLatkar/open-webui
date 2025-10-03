@@ -10,7 +10,6 @@ output "openid_provider_arn" {
 output "openid_provider_url" {
   value       = aws_eks_cluster.eks.identity[0].oidc[0].issuer
   description = "Openid Provider URL."
-  # Setting an output value as sensitive prevents Terraform from showing its value in plan and apply.
   sensitive = false
 }
 
@@ -18,7 +17,6 @@ output "openid_provider_url" {
 output "cluster_name" {
   value       = aws_eks_cluster.eks.name
   description = "Name of EKS cluster"
-  # Setting an output value as sensitive prevents Terraform from showing its value in plan and apply.
   sensitive = false
 }
 

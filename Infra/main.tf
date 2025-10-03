@@ -1,7 +1,4 @@
-provider "aws" {
-  profile = "default"
-  region  = "us-east-1"
-}
+
 
 
 terraform {
@@ -15,6 +12,11 @@ terraform {
       version = "3.0.2"
     }
   }
+}
+
+provider "aws" {
+  profile = "default"
+  region  = "us-east-1"
 }
 
 data "aws_eks_cluster_auth" "cluster" {
@@ -40,7 +42,6 @@ module "VPC" {
 module "EKS" {
   source = "./EKS"
   EKSvar = local.EKSvar
-  # VPCvar = local.VPCvar
   private_subnet_ids = module.VPC.private_subnet_ids
   public_subnet_ids = module.VPC.public_subnet_ids
 
@@ -48,8 +49,6 @@ module "EKS" {
     module.VPC
   ]
 }
-
-
 
 # Module to create Addons
 module "Addon" {
@@ -77,19 +76,8 @@ module "ACM" {
   ACMvar = local.ACMvar
 }
 
-locals {
-  EKSvar = {
-    ami_type = var.ami_type
-    instance_types = var.instance_types
-    k8_version = var.k8_version
-    Name = var.Name
-    desired_nodegorup_size = var.desired_nodegorup_size
-    disk_size = var.disk_size
-    capacity_type = var.capacity_type
-    
-  }
-}
 
+# Local values for VPC module
 locals {
   VPCvar = {
     subnets = local.subnets
@@ -99,6 +87,7 @@ locals {
   }
 }
 
+# Local values for Subnets of VPC module
 locals {
   subnets = {
     "public-1" = {
@@ -127,6 +116,21 @@ locals {
   private_subnets = { for k, v in local.subnets : k => v if v.type == "private" }
 }
 
+# Local values for EKS module
+locals {
+  EKSvar = {
+    ami_type = var.ami_type
+    instance_types = var.instance_types
+    k8_version = var.k8_version
+    Name = var.Name
+    desired_nodegorup_size = var.desired_nodegorup_size
+    disk_size = var.disk_size
+    capacity_type = var.capacity_type
+    
+  }
+}
+
+# Local values for Addon module
 locals {
   Addonvar = {
     openid_provider_arn     = module.EKS.openid_provider_arn
@@ -139,6 +143,7 @@ locals {
   }
 }
 
+# Local values for Apps module
 locals {
   Appsvar = {
     Name = var.Name
@@ -147,6 +152,7 @@ locals {
   }
 }
 
+# Local values for ACM module
 locals {
   ACMvar = {
     Name = var.Name
@@ -154,14 +160,13 @@ locals {
   }
 }
 
-
-
-
+# Open WebUI Status Output
 output "open_webui_helm_release_status" {
   value       = module.Apps.open_webui_helm_release_status
   description = "OPen Webui Helm release status"
 }
 
+# Open WebUI URL Output
 output "open_webui_url" {
   value       = module.Apps.open_webui_url
   description = "Open-WebUI URL"

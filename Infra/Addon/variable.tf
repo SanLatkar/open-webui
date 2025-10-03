@@ -1,4 +1,4 @@
-# Variable function To call variable values for EFS module from root module.
+# Variable function To call variable values for Addon module from root module.
 variable "Addonvar" {
   type = object({
     openid_provider_arn = string
