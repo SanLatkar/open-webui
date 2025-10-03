@@ -1,0 +1,50 @@
+
+replicaCount: 1
+
+# Resource allocation per pod
+resources:
+  requests:
+    cpu: 1
+    memory: 4Gi
+  limits:
+    cpu: 2
+    memory: 8Gi
+
+# # Persistent volume for storing models
+persistence:
+  enabled: false
+
+# Service configuration
+service:
+  type: NodePort
+
+ollama:
+  enabled: true
+  fullnameOverride: "${name}-ollama"
+  ollama:
+    # gpu:
+    #   enabled: true
+    #   type: 'nvidia'
+    #   number: 1
+    models:
+      pull:
+        - llama2
+      run:
+        - llama2
+
+
+pipelines:
+  # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
+  enabled: false
+
+ingress:
+  enabled: true
+  class: alb
+  annotations: 
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/group.name: ${name}
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'  
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:165672952247:certificate/20668381-5373-415e-b8c5-2f589f909556
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    alb.ingress.kubernetes.io/success-codes: 200,404
+  host: '${name}.${domain_name}'

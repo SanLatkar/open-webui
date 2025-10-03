@@ -10,10 +10,25 @@ terraform {
       source = "hashicorp/aws"
       version = "6.10.0"
     }
-
+    helm = {
+      source  = "hashicorp/helm"
+      version = "3.0.2"
+    }
   }
 }
 
+data "aws_eks_cluster_auth" "cluster" {
+  name = var.Name
+}
+
+# Helm Provider Configuration
+provider "helm" {
+  kubernetes = {
+    host                   = module.EKS.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.EKS.cluster_certificate_authority_data)
+    token                  = data.aws_eks_cluster_auth.cluster.token
+  }
+}
 
 
 
@@ -90,8 +105,27 @@ locals {
 
 locals {
   ALBvar = {
-    OpenidARN     = module.EKS.OpenidARN
-    OpenidProvider = module.EKS.OpenidProvider
+    openid_provider_arn     = module.EKS.openid_provider_arn
+    openid_provider_url = module.EKS.openid_provider_url
     Name = var.Name
+    region = var.region
+    domain_name = var.domain_name
+    vpc_id = module.VPC.vpc_id
   }
+}
+
+
+output "alb_controller_role_arn" {
+  value       = module.ALB.alb_controller_role_arn
+  description = "ALB Controller IAM Role ARN"
+}
+
+output "helm_release_status" {
+  value       = module.ALB.helm_release_status
+  description = "Helm release status"
+}
+
+output "open_webui_url" {
+  value       = module.ALB.open_webui_url
+  description = "Open-WebUI URL"
 }

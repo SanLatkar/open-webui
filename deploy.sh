@@ -11,10 +11,10 @@ terraform -chdir="$Infra_dir" init
 terraform -chdir="$Infra_dir" validate
 
 # Plan the Terraform configuration
-terraform -chdir="$Infra_dir" plan
+terraform -chdir="$Infra_dir" plan -var-file="prod.tfvars"
 
 # Apply the Terraform configuration
-terraform -chdir="$Infra_dir" apply -auto-approve
+terraform -chdir="$Infra_dir" apply -auto-approve -var-file="prod.tfvars"
 
 # Install AWS ALB Controller using Helm
 helm repo add eks https://aws.github.io/eks-charts

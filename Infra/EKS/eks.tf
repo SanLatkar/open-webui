@@ -71,6 +71,10 @@ resource "aws_eks_cluster" "eks" {
 
     # Get all subnet IDs dynamically
     subnet_ids = concat(values(var.private_subnet_ids), values(var.public_subnet_ids))
+ 
+    # security_group_ids = [
+    #   aws_security_group.eks_cluster.id
+    # ]
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
@@ -95,25 +99,41 @@ resource "aws_iam_openid_connect_provider" "eks-OIDC" {
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [data.tls_certificate.TLS_certificate.certificates[0].sha1_fingerprint]
   url             = aws_eks_cluster.eks.identity[0].oidc[0].issuer
+
+  tags = {
+    Name = "${var.EKSvar.Name}-OIDC-provider"
+  }
 }
 
-output "OpenidARN" {
+output "openid_provider_arn" {
   value       = aws_iam_openid_connect_provider.eks-OIDC.arn
   description = "Openid ARN."
   # Setting an output value as sensitive prevents Terraform from showing its value in plan and apply.
   sensitive = false
 }
 
-output "OpenidProvider" {
+output "openid_provider_url" {
   value       = aws_eks_cluster.eks.identity[0].oidc[0].issuer
   description = "Openid Provider URL."
   # Setting an output value as sensitive prevents Terraform from showing its value in plan and apply.
   sensitive = false
 }
 
-output "ClusterName" {
+output "cluster_name" {
   value       = aws_eks_cluster.eks.name
   description = "Name of EKS cluster"
   # Setting an output value as sensitive prevents Terraform from showing its value in plan and apply.
   sensitive = false
+}
+
+output "cluster_endpoint" {
+  value       = aws_eks_cluster.eks.endpoint
+  description = "EKS Cluster endpoint"
+}
+
+
+output "cluster_certificate_authority_data" {
+  value       = aws_eks_cluster.eks.certificate_authority[0].data
+  description = "EKS Cluster certificate authority data"
+  sensitive   = true
 }
