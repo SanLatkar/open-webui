@@ -164,7 +164,7 @@ Name = "open-webui"
 # AWS Configuration
 region = "us-east-1"
 
-
+# EKS Configuration
 ami_type = "AL2023_x86_64_STANDARD"
 k8_version = "1.32"
 instance_types = "m7i-flex.large"
