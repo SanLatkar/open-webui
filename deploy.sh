@@ -4,16 +4,16 @@ set -e
 cd Infra
 
 # Initialize Terraform in the Infra directory
-terraform -chdir="$Infra_dir" init
+terraform init
 
 # Validate the Terraform configuration
-terraform -chdir="$Infra_dir" validate
+terraform validate
 
 # Plan the Terraform configuration
-terraform -chdir="$Infra_dir" plan -var-file="prod.tfvars"
+terraform plan -var-file="prod.tfvars"
 
 # Apply the Terraform configuration
-terraform -chdir="$Infra_dir" apply -auto-approve -var-file="prod.tfvars"
+terraform apply -auto-approve -var-file="prod.tfvars"
 
 
 # Open WebUI will be accessible on https://open-webui.sanketlatkar.cloud
