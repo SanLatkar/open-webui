@@ -158,22 +158,24 @@ https://open-webui.sanketlatkar.cloud
 Edit `Infra/prod.tfvars` to customize your deployment:
 
 ```hcl
+# Name prefix or Anme for all resources
+Name = "open-webui"
+
 # AWS Configuration
-aws_region = "us-east-1"
-cluster_name = "open-webui-cluster"
+region = "us-east-1"
+
+
+ami_type = "AL2023_x86_64_STANDARD"
+k8_version = "1.32"
+instance_types = "m7i-flex.large"
+disk_size = 50
+capacity_type = "ON_DEMAND"
+desired_nodegorup_size = 1
 
 # Domain Configuration
 domain_name = "sanketlatkar.cloud"
-subdomain = "open-webui"
 
-# EKS Configuration
-node_instance_type = "t3.medium"
-desired_capacity = 2
-min_capacity = 1
-max_capacity = 3
 
-# Application Configuration
-open_webui_version = "latest"
 ```
 
 ### Environment-Specific Configs
