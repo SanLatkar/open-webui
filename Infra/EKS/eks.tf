@@ -1,13 +1,8 @@
-# Resource: aws_iam_role
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
-
+# IAM Role for EKS Cluster
 resource "aws_iam_role" "eks_cluster" {
   # The name of the role
   name = "${var.EKSvar.Name}-cluster-role"
 
-  # The policy that grants an entity permission to assume the role.
-  # Used to access AWS resources that you might not normally have access to.
-  # The role that Amazon EKS will use to create AWS resources for Kubernetes clusters
   assume_role_policy = <<POLICY
 {
   "Version": "2012-10-17",
@@ -33,12 +28,9 @@ locals {
     "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
     "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
   ])
-#   {
-#     cluster_policy = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-#     vpc_controller = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-#   }
 }
 
+# EKS Cluster Role Policy Attachments
 resource "aws_iam_role_policy_attachment" "eks_cluster" {
   for_each = local.eks_cluster_policies
 
@@ -46,9 +38,12 @@ resource "aws_iam_role_policy_attachment" "eks_cluster" {
   role       = aws_iam_role.eks_cluster.name
 }
 
-# Resource: aws_eks_cluster
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster
+# Override with variable or hardcoded value if necessary
+locals {
+  workstation-external-cidr = "${chomp(data.http.workstation-external-ip.response_body)}/32"
+}
 
+# EKS Cluster
 resource "aws_eks_cluster" "eks" {
   # Name of the cluster.
   name = var.EKSvar.Name
@@ -72,16 +67,8 @@ resource "aws_eks_cluster" "eks" {
     # Get all subnet IDs dynamically
     subnet_ids = concat(values(var.private_subnet_ids), values(var.public_subnet_ids))
  
-    # security_group_ids = [
-    #   aws_security_group.eks_cluster.id
-    # ]
   }
 
-  # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
-  # Otherwise, EKS will not be able to properly delete EKS managed EC2 infrastructure such as Security Groups.
-#   depends_on = [
-#     aws_iam_role_policy_attachment.amazon_eks_cluster_policy
-#   ]
   depends_on = [
     aws_iam_role_policy_attachment.eks_cluster
   ]
@@ -91,10 +78,7 @@ resource "aws_eks_cluster" "eks" {
 
 }
 
-data "tls_certificate" "TLS_certificate" {
-  url = aws_eks_cluster.eks.identity[0].oidc[0].issuer
-}
-
+# IAM Role for EKS Node Group
 resource "aws_iam_openid_connect_provider" "eks-OIDC" {
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [data.tls_certificate.TLS_certificate.certificates[0].sha1_fingerprint]
@@ -103,37 +87,4 @@ resource "aws_iam_openid_connect_provider" "eks-OIDC" {
   tags = {
     Name = "${var.EKSvar.Name}-OIDC-provider"
   }
-}
-
-output "openid_provider_arn" {
-  value       = aws_iam_openid_connect_provider.eks-OIDC.arn
-  description = "Openid ARN."
-  # Setting an output value as sensitive prevents Terraform from showing its value in plan and apply.
-  sensitive = false
-}
-
-output "openid_provider_url" {
-  value       = aws_eks_cluster.eks.identity[0].oidc[0].issuer
-  description = "Openid Provider URL."
-  # Setting an output value as sensitive prevents Terraform from showing its value in plan and apply.
-  sensitive = false
-}
-
-output "cluster_name" {
-  value       = aws_eks_cluster.eks.name
-  description = "Name of EKS cluster"
-  # Setting an output value as sensitive prevents Terraform from showing its value in plan and apply.
-  sensitive = false
-}
-
-output "cluster_endpoint" {
-  value       = aws_eks_cluster.eks.endpoint
-  description = "EKS Cluster endpoint"
-}
-
-
-output "cluster_certificate_authority_data" {
-  value       = aws_eks_cluster.eks.certificate_authority[0].data
-  description = "EKS Cluster certificate authority data"
-  sensitive   = true
 }

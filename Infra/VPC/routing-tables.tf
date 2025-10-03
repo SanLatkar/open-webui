@@ -1,5 +1,3 @@
-
-
 # Public route table (one for all public subnets)
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.EKS-vpc.id
@@ -28,4 +26,20 @@ resource "aws_route_table" "private" {
   tags = {
     Name = "${var.VPCvar.Name}-${each.key}-routetable"
   }
+}
+
+# Public subnet associations (all use same route table)
+resource "aws_route_table_association" "public" {
+  for_each = var.VPCvar.public_subnets
+
+  subnet_id      = aws_subnet.main[each.key].id
+  route_table_id = aws_route_table.public.id
+}
+
+# Private subnet associations (each uses own route table)
+resource "aws_route_table_association" "private" {
+  for_each = var.VPCvar.private_subnets
+
+  subnet_id      = aws_subnet.main[each.key].id
+  route_table_id = aws_route_table.private[each.key].id
 }

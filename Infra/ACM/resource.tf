@@ -1,20 +1,3 @@
-variable "ACMvar" {
-  type = object({
-    Name = string
-    domain_name = string
-  })
-}
-
-# #Hosted Zone
-# resource "aws_route53_zone" "hostedZone" {
-#   name = var.ACMvar.domain_name
-# }
-
-data "aws_route53_zone" "hostedZone" {
-  name         = var.ACMvar.domain_name
-  private_zone = false
-}
-
 # AWS Public Certificate with DNS Validation Method
 resource "aws_acm_certificate" "certificate" {
   domain_name       = var.ACMvar.domain_name
@@ -47,13 +30,8 @@ resource "aws_route53_record" "CNAME" {
   ttl             = 60
 }
 
+# Validate ACM Certificate using Route53 CNAME Record
 resource "aws_acm_certificate_validation" "certificateValidation" {
   certificate_arn         = aws_acm_certificate.certificate.arn
   validation_record_fqdns = [for record in aws_route53_record.CNAME : record.fqdn]
-}
-
-output "acm_certificate_arn" {
-  value       = aws_acm_certificate.certificate.arn
-  description = "ARN of the ACM Certificate"
-  
 }

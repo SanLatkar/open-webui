@@ -30,43 +30,45 @@ provider "helm" {
   }
 }
 
-
-
-# Module to create AWS EKS
-module "EKS" {
-  source = "./EKS"
-  EKSvar = local.EKSvar
-  VPCvar = local.VPCvar
-  private_subnet_ids = module.VPC.private_subnet_ids
-  public_subnet_ids = module.VPC.public_subnet_ids
-}
-
 # Module to create AWS VPC
 module "VPC" {
   source = "./VPC"
   VPCvar = local.VPCvar
 }
 
-# Module to create AWS ALB Role
-# module "ALB" {
-#   source = "./ALB"
-#   ALBvar = local.ALBvar
-# }
+# Module to create AWS EKS
+module "EKS" {
+  source = "./EKS"
+  EKSvar = local.EKSvar
+  # VPCvar = local.VPCvar
+  private_subnet_ids = module.VPC.private_subnet_ids
+  public_subnet_ids = module.VPC.public_subnet_ids
+
+  depends_on = [
+    module.VPC
+  ]
+}
+
+
 
 # Module to create Addons
 module "Addon" {
   source = "./Addon"
-  ALBvar = local.ALBvar
+  Addonvar = local.Addonvar
+
+  depends_on = [
+    module.EKS
+  ]
 }
 
 # Module to create Apps
 module "Apps" {
   source = "./Apps"
-  ALBvar = local.ALBvar
+  Appsvar = local.Appsvar
 
-  # depends_on = [
-  #   module.Addon
-  # ]
+  depends_on = [
+    module.Addon
+  ]
 }
 
 # Module to create AWS ACM
@@ -126,13 +128,21 @@ locals {
 }
 
 locals {
-  ALBvar = {
+  Addonvar = {
     openid_provider_arn     = module.EKS.openid_provider_arn
     openid_provider_url = module.EKS.openid_provider_url
     Name = var.Name
     region = var.region
     domain_name = var.domain_name
     vpc_id = module.VPC.vpc_id
+    acm_certificate_arn = module.ACM.acm_certificate_arn
+  }
+}
+
+locals {
+  Appsvar = {
+    Name = var.Name
+    domain_name = var.domain_name
     acm_certificate_arn = module.ACM.acm_certificate_arn
   }
 }
@@ -146,10 +156,6 @@ locals {
 
 
 
-output "alb_controller_role_arn" {
-  value       = module.Addon.alb_controller_role_arn
-  description = "ALB Controller IAM Role ARN"
-}
 
 output "open_webui_helm_release_status" {
   value       = module.Apps.open_webui_helm_release_status
@@ -159,10 +165,4 @@ output "open_webui_helm_release_status" {
 output "open_webui_url" {
   value       = module.Apps.open_webui_url
   description = "Open-WebUI URL"
-}
-
-output "alb_dns_name" {
-  value       = module.Apps.alb_dns_name
-  description = "DNS name of the ALB"
-  
 }

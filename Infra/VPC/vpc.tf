@@ -1,6 +1,4 @@
-# Resource: aws_vpc
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc
-
+# VPC for EKS Cluster
 resource "aws_vpc" "EKS-vpc" {
   # The CIDR block for the VPC.
   cidr_block = "192.168.0.0/16"
@@ -23,9 +21,13 @@ resource "aws_vpc" "EKS-vpc" {
   }
 }
 
-output "vpc_id" {
-  value       = aws_vpc.EKS-vpc.id
-  description = "VPC id."
-  # Setting an output value as sensitive prevents Terraform from showing its value in plan and apply.
-  sensitive = false
+# Internet Gateway for the VPC
+resource "aws_internet_gateway" "EKS-igw" {
+  # The VPC ID to create in.
+  vpc_id = aws_vpc.EKS-vpc.id
+
+  # A map of tags to assign to the resource.
+  tags = {
+    Name = var.VPCvar.Name
+  }
 }
