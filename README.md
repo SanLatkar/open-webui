@@ -9,8 +9,8 @@ A production-ready deployment of Open WebUI on Amazon EKS using Terraform, featu
 - [Architecture](#architecture)
 - [Quick Start](#-quick-start)
 - [Deployment Steps](#-deployment-steps)
-- [Configuration](#-configuration)
-- [Problems Solved](#-problems-solved)
+- [Configuration](#configuration)
+- [Problems Solved](#problems-solved)
 - [Cleanup](#-cleanup)
 - [Troubleshooting](#-troubleshooting)
 
@@ -157,7 +157,7 @@ Wait for DNS propagation (5-30 minutes) and access:
 https://open-webui.sanketlatkar.cloud
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 ### Terraform Variables
 
@@ -189,7 +189,7 @@ domain_name = "sanketlatkar.cloud"
 - **Development**: `Infra/dev.tfvars`
 - **Production**: `Infra/prod.tfvars`
 
-## 🛠️ Problems Solved
+## Problems Solved
 
 ### 1. **Free Tier Storage Constraints**
 
