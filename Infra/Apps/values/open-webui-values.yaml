@@ -10,6 +10,14 @@ resources:
     cpu: 2
     memory: 8Gi
 
+extraEnvVars:
+  - name: ENABLE_SIGNUP
+    value: 'true'
+  - name: DEFAULT_USER_ROLE
+    value: user
+  - name: WEBUI_AUTH
+    value: 'false'
+
 # # Persistent volume for storing models
 persistence:
   enabled: false
@@ -28,9 +36,9 @@ ollama:
     #   number: 1
     models:
       pull:
-        - llama2
+        - qwen2.5:0.5b
       run:
-        - llama2
+        - qwen2.5:0.5b
 
 
 pipelines:
