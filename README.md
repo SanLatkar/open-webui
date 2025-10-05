@@ -6,6 +6,7 @@ A production-ready deployment of Open WebUI on Amazon EKS using Terraform, featu
 
 - [Overview](#-overview)
 - [Prerequisites](#-prerequisites)
+- [Architecture](#architecture)
 - [Quick Start](#-quick-start)
 - [Deployment Steps](#-deployment-steps)
 - [Configuration](#-configuration)
@@ -51,6 +52,11 @@ This project deploys Open WebUI (a user-friendly AI interface) on AWS EKS with:
 
 - **Registered Domain**: Purchase from any registrar (e.g., Namecheap, GoDaddy)
 - **DNS Access**: Ability to update nameservers
+
+## Architecture
+
+<img width="502" height="443" alt="Open WebUI" src="https://github.com/user-attachments/assets/edcd2c97-3203-41b2-872a-7096ec20e68c" />
+
 
 ## 🚀 Quick Start
 
